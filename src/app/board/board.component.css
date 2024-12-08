@@ -1,0 +1,15 @@
+
+.board-wrapper {
+  display: grid;
+  grid-template-columns: repeat(10, 30px);
+}
+
+
+
+.brick {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  background: white;
+  font-size: 10px;
+}
