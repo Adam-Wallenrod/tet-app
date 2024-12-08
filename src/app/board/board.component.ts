@@ -22,10 +22,17 @@ export enum BLOCK_TYPE {
   styleUrl: './board.component.css',
 })
 export class BoardComponent implements OnInit, OnDestroy {
+  readonly STARTING_X_POS = 3;
+
+  readonly STARTING_Y_POS = 0;
 
   readonly boardLength = 20;
 
   readonly boardWidth = 10;
+
+  movingBricks: Brick[] = [];
+
+  settledBricks: Brick[] = [];
 
   bricks: Brick[] = [];
 
@@ -41,19 +48,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.initBricks();
-    //console.log('bricks: ', this.bricks);
-
-    this.interval
-      .pipe(
-        takeWhile(() => this.#alive),
-      )
-      .subscribe((value) => {
-        this.timer = value;
-        //console.log('timer: ', this.timer);
-        this.setSingleBrick(5, value, 'blue');
-        console.log('%c random block --> ', 'color: red',this.getNextBlock());
-      });
+    this.initBoard();
+    this.animateMoveDown();
   }
 
 
@@ -61,20 +57,48 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.#alive = false;
   }
 
-  private initBricks(): void {
-    for (let i = 0; i < this.boardLength; i++) {
-      for (let j = 0; j < this.boardWidth; j++) {
+  private animateMoveDown(): void {
+    let xPosition = this.STARTING_X_POS;
+    let yPosition = this.STARTING_Y_POS;
+    this.interval
+      .pipe(
+        takeWhile(() => this.#alive),
+      )
+      .subscribe((value) => {
+        this.timer = value;
+        //console.log('timer: ', this.timer);
+        const movingBrick = this.setSingleBrick(xPosition, yPosition, 'blue');
+        yPosition++;
+        setTimeout(() => this.unsetSingleBrick(movingBrick!) , 1000)
+        console.log('%c random block --> ', 'color: red',this.getRandomTetraminoType());
+      });
+  }
+
+  private initBoard(): void {
+    for (let j = 0; j < this.boardLength; j++) {
+      for (let i = 0; i < this.boardWidth; i++) {
         this.bricks.push(new Brick(i, j));
       }
     }
   }
 
-  setSingleBrick(x: number, y: number, color: string) {
+  setSingleBrick(x: number, y: number, color: string): Brick | undefined {
     const selectedBrick = this.bricks.find(brick => brick.getX() === x && brick.getY() === y);
     selectedBrick?.mark(color);
+    if(selectedBrick) {
+      this.movingBricks.push(selectedBrick);
+    }
+    return selectedBrick;
   }
 
-  getNextBlock(): BLOCK_TYPE {
+  unsetSingleBrick(activeBrick: Brick): void {
+    activeBrick.clear();
+    this.movingBricks = this.movingBricks.filter( brick => {
+      return brick.getX() !== activeBrick.getX() && brick.getY() !== activeBrick.getY();
+    });
+  }
+
+  getRandomTetraminoType(): BLOCK_TYPE {
     const max = 7 ;
     const min = 0
     //console.log('enum to array --> ', ObjectUtils.enumToArray(BLOCK_TYPE));

@@ -2,13 +2,13 @@
 
   <ng-container>
     <div *ngFor="let brick of bricks" class="brick"
-          id="{{ brick.getX() }}-{{ brick.getY() }}"
-          style="background-color: {{ brick.getColor() }}"
+         id="{{ brick.getX() }}-{{ brick.getY() }}"
+         style="background-color: {{ brick.getColor() }}"
     >
-      {{brick.getX()}}/{{brick.getY()}}
+      {{ brick.getX() }}/{{ brick.getY() }}
     </div>
   </ng-container>
 
-  <div>Time: {{timer}}</div>
+  <div>Time: {{ timer }}</div>
 
 </div>
