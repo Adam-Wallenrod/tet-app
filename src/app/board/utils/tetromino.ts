@@ -26,7 +26,6 @@ export class Tetrimino {
 
   private initPosition(type: BLOCK_TYPE): void {
     switch(type) {
-
       case(BLOCK_TYPE.I):
         this.initTypeI();
         break;

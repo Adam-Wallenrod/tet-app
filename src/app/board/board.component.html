@@ -1,7 +1,7 @@
 <div class="board-wrapper">
 
   <ng-container>
-    <div *ngFor="let brick of bricks" class="brick"
+    <div *ngFor="let brick of board.getBricks()" class="brick"
          id="{{ brick.getX() }}-{{ brick.getY() }}"
          style="background-color: {{ brick.getColor() }}"
     >

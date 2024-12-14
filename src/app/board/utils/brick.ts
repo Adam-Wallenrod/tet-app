@@ -3,9 +3,9 @@ export class Brick {
 
   private isFilled: boolean = false;
 
-  private x: number;
+  protected x: number;
 
-  private y: number;
+  protected y: number;
 
 
   constructor(x: number, y: number) {
@@ -37,6 +37,4 @@ export class Brick {
     this.color = 'white';
     this.isFilled = false;
   }
-
-
 }
