@@ -34,9 +34,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   readonly boardLength = 20;
   readonly boardWidth = 10;
 
-  currentTetramino: GameBrick | undefined = undefined;
-
-  movingBricks: Brick[] = [];
+  movingBricks: Brick[] = []; // moving Tetraminio
   settledBricks: Brick[] = [];
 
   bricks: Brick[] = [];
@@ -50,12 +48,12 @@ export class BoardComponent implements OnInit, OnDestroy {
   #alive = true;
 
   @HostListener('window:keyup', ['$event'])
-  keyevent( key: KeyboardEvent) {
-    if(key.keyCode === KEY_CODE.LEFT_ARROW) {
+  keyevent(key: KeyboardEvent) {
+    if (key.keyCode === KEY_CODE.LEFT_ARROW) {
       this.moveTertraminoLeft();
     }
 
-    if(key.keyCode === KEY_CODE.RIGHT_ARROW) {
+    if (key.keyCode === KEY_CODE.RIGHT_ARROW) {
       this.moveTertraminoRight();
     }
   }
@@ -69,27 +67,27 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.#alive = false;
   }
 
- private getRandomTetraminoType(): BLOCK_TYPE {
-    const max = 7 ;
-    const min = 0
+  private getRandomTetraminoType(): BLOCK_TYPE {
+    const max = 7;
+    const min = 0;
     const blockTypes = ObjectUtils.enumToArray(BLOCK_TYPE);
-    const randomNumber = Math.floor(Math.random() * max + min)
+    const randomNumber = Math.floor(Math.random() * max + min);
     console.log('%c randomNumber --> ', 'color: blue', randomNumber);
     return blockTypes[randomNumber];
   }
 
-  private createSingleBrick(x: number, y: number, color: string): GameBrick | undefined {
-    const gameBrick = new GameBrick(x, y);
-    gameBrick?.mark(color);
-    if(gameBrick) {
-      this.movingBricks.push(gameBrick);
-    }
-    return gameBrick;
-  }
+  // private createSingleBrick(x: number, y: number, color: string): GameBrick | undefined {
+  //   const gameBrick = new GameBrick(x, y, color);
+  //   gameBrick?.mark(color);
+  //   if(gameBrick) {
+  //     this.movingBricks.push(gameBrick);
+  //   }
+  //   return gameBrick;
+  // }
 
-   private unsetSingleBrick(activeBrick: Brick): void {
+  private unsetSingleBrick(activeBrick: Brick): void {
     activeBrick.clear();
-    this.movingBricks = this.movingBricks.filter( brick => {
+    this.movingBricks = this.movingBricks.filter(brick => {
       return brick.getX() !== activeBrick.getX() && brick.getY() !== activeBrick.getY();
     });
   }
@@ -104,10 +102,10 @@ export class BoardComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this.timer = value;
         //console.log('timer: ', this.timer);
-        const tetramino = this.createSingleBrick(xPosition, yPosition, 'blue');
-        tetramino?.moveY();
+        const tetramino = this.board.addTetramino(xPosition, yPosition, 'blue');
+        this.board.moveY();
         //setTimeout(() => this.unsetSingleBrick(tetramino!) , 1000)
-        console.log('%c random block --> ', 'color: red',this.getRandomTetraminoType());
+        console.log('%c random block --> ', 'color: red', this.getRandomTetraminoType());
       });
   }
 
@@ -120,6 +118,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private moveTertraminoLeft(): void {
+
   }
 
   private moveTertraminoRight(): void {
