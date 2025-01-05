@@ -5,32 +5,28 @@ export class Board {
   readonly boardLength = 20;
   readonly boardWidth = 10;
 
-  currentTetramino: GameBrick | undefined = undefined;
-
-  movingBricks: Brick[] = [];
+  movingBricks: Map<string, Brick> = new Map();
   settledBricks: Brick[] = [];
 
   bricks: Brick[] = [];
 
   constructor() {
     this.initBoard();
-
   }
 
-  addTetramino(x: number, y: number, color: string): Brick[] {
+  addTetramino(x: number, y: number, color: string): void {
     const tetramino = this.createSingleBrick(x, y, color);
-    if(tetramino) {
-      this.movingBricks.push(tetramino);
+    if (tetramino) {
+      this.movingBricks.set(this.getBrickId(tetramino), tetramino);
     }
-    return this.movingBricks;
   }
 
   createSingleBrick(x: number, y: number, color: string): Brick | undefined {
-    const gameBrick = this.bricks.find(brick => brick.getX() === x && brick.getY());
-    gameBrick?.mark('blue');
-    // if(gameBrick) {
-    //   this.movingBricks.push(gameBrick);
-    // }
+    const gameBrick = this.bricks.find(brick => brick.getX() === x && brick.getY() === y);
+    gameBrick?.mark(color);
+    if (gameBrick) {
+      this.movingBricks.set(this.getBrickId(gameBrick), gameBrick);
+    }
     return gameBrick;
   }
 
@@ -39,7 +35,23 @@ export class Board {
   }
 
   moveY(): void {
-    this.movingBricks.map(item => item.clear());
+    const aaa = [];
+    for (let [key, movingItem] of this.movingBricks) {
+      const newBrick = this.bricks.find(item => item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1);
+      console.log('Pos x --> ', newBrick?.getX());
+      console.log('Pos y --> ', newBrick?.getY());
+      if (newBrick) {
+        this.unsetSingleBrick(movingItem);
+        // this.movingBricks.set(this.getBrickId(newBrick), newBrick);
+        // newBrick.mark('blue');
+        aaa.push(newBrick);
+      }
+    }
+
+    aaa.forEach(newItem => {
+      this.movingBricks.set(this.getBrickId(newItem), newItem);
+      newItem.mark('blue');
+    });
   }
 
   moveXLeft(): void {
@@ -49,7 +61,10 @@ export class Board {
 
   moveXRight(): void {
 
+  }
 
+  private getBrickId(brick: Brick): string {
+    return brick.getX() + '-' + brick.getY();
   }
 
   private initBoard(): void {
@@ -58,5 +73,15 @@ export class Board {
         this.bricks.push(new Brick(i, j));
       }
     }
+  }
+
+  private unsetSingleBrick(activeBrick: Brick): void {
+    setTimeout(() => {
+      activeBrick.clear();
+      this.movingBricks.delete(this.getBrickId(activeBrick));
+    }, 1000);
+    // this.movingBricks = this.movingBricks.filter(brick => {
+    //   return brick.getX() !== activeBrick.getX() && brick.getY() !== activeBrick.getY();
+    // });
   }
 }

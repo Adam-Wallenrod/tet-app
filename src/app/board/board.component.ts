@@ -34,9 +34,6 @@ export class BoardComponent implements OnInit, OnDestroy {
   readonly boardLength = 20;
   readonly boardWidth = 10;
 
-  movingBricks: Brick[] = []; // moving Tetraminio
-  settledBricks: Brick[] = [];
-
   bricks: Brick[] = [];
 
   board: Board = new Board();
@@ -76,22 +73,6 @@ export class BoardComponent implements OnInit, OnDestroy {
     return blockTypes[randomNumber];
   }
 
-  // private createSingleBrick(x: number, y: number, color: string): GameBrick | undefined {
-  //   const gameBrick = new GameBrick(x, y, color);
-  //   gameBrick?.mark(color);
-  //   if(gameBrick) {
-  //     this.movingBricks.push(gameBrick);
-  //   }
-  //   return gameBrick;
-  // }
-
-  private unsetSingleBrick(activeBrick: Brick): void {
-    activeBrick.clear();
-    this.movingBricks = this.movingBricks.filter(brick => {
-      return brick.getX() !== activeBrick.getX() && brick.getY() !== activeBrick.getY();
-    });
-  }
-
   private mainLoop(): void {
     let xPosition = this.STARTING_X_POS;
     let yPosition = this.STARTING_Y_POS;
@@ -102,9 +83,11 @@ export class BoardComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this.timer = value;
         //console.log('timer: ', this.timer);
-        const tetramino = this.board.addTetramino(xPosition, yPosition, 'blue');
-        this.board.moveY();
-        //setTimeout(() => this.unsetSingleBrick(tetramino!) , 1000)
+        if(this.board.movingBricks.size === 0) {
+          this.board.addTetramino(xPosition, yPosition, 'blue');
+        } else {
+          this.board.moveY();
+        }
         console.log('%c random block --> ', 'color: red', this.getRandomTetraminoType());
       });
   }
