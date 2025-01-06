@@ -74,21 +74,13 @@ export class BoardComponent implements OnInit, OnDestroy {
   }
 
   private mainLoop(): void {
-    let xPosition = this.STARTING_X_POS;
-    let yPosition = this.STARTING_Y_POS;
     this.interval
       .pipe(
         takeWhile(() => this.#alive),
       )
       .subscribe((value) => {
         this.timer = value;
-        //console.log('timer: ', this.timer);
-        if(this.board.movingBricks.size === 0) {
-          this.board.addTetramino(xPosition, yPosition, 'blue');
-        } else {
-          this.board.moveY();
-        }
-        console.log('%c random block --> ', 'color: red', this.getRandomTetraminoType());
+        this.animateTetramino();
       });
   }
 
@@ -98,6 +90,17 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.bricks.push(new Brick(i, j));
       }
     }
+  }
+
+  private animateTetramino(): void {
+    let xPosition = this.STARTING_X_POS;
+    let yPosition = this.STARTING_Y_POS;
+    if (this.board.movingBricks.size === 0) {
+      this.board.addTetramino(xPosition, yPosition, 'blue');
+    } else {
+      this.board.moveY();
+    }
+    console.log('%c random block --> ', 'color: red', this.getRandomTetraminoType());
   }
 
   private moveTertraminoLeft(): void {

@@ -9,6 +9,7 @@ export class Board {
   settledBricks: Brick[] = [];
 
   bricks: Brick[] = [];
+  tetraminoBricks: Map<string, Brick> = new Map();
 
   constructor() {
     this.initBoard();
@@ -30,25 +31,27 @@ export class Board {
     return gameBrick;
   }
 
+  createTetramino(): void {
+
+  }
+
   getBricks(): Brick[] {
     return this.bricks;
   }
 
   moveY(): void {
-    const aaa = [];
+    const updatedMovingBricks: Brick[] = [];
     for (let [key, movingItem] of this.movingBricks) {
       const newBrick = this.bricks.find(item => item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1);
       console.log('Pos x --> ', newBrick?.getX());
       console.log('Pos y --> ', newBrick?.getY());
       if (newBrick) {
         this.unsetSingleBrick(movingItem);
-        // this.movingBricks.set(this.getBrickId(newBrick), newBrick);
-        // newBrick.mark('blue');
-        aaa.push(newBrick);
+        updatedMovingBricks.push(newBrick);
       }
     }
 
-    aaa.forEach(newItem => {
+    updatedMovingBricks.forEach(newItem => {
       this.movingBricks.set(this.getBrickId(newItem), newItem);
       newItem.mark('blue');
     });
@@ -76,12 +79,20 @@ export class Board {
   }
 
   private unsetSingleBrick(activeBrick: Brick): void {
-    setTimeout(() => {
-      activeBrick.clear();
-      this.movingBricks.delete(this.getBrickId(activeBrick));
-    }, 1000);
-    // this.movingBricks = this.movingBricks.filter(brick => {
-    //   return brick.getX() !== activeBrick.getX() && brick.getY() !== activeBrick.getY();
-    // });
+    activeBrick.clear();
+    this.movingBricks.delete(this.getBrickId(activeBrick));
+  }
+
+  //TODO: how to do that???
+  private isBottomReached(brick: Brick): boolean {
+    return false;
+  }
+
+  private isLeftLimitReached(brick: Brick): boolean {
+    return brick.getX() <= 0;
+  }
+
+  private isRightLimitReached(brick: Brick): boolean {
+    return brick.getX() >= (this.boardWidth - 1);
   }
 }
