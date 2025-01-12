@@ -6,7 +6,7 @@ export class Board {
   readonly boardWidth = 10;
 
   movingBricks: Map<string, Brick> = new Map();
-  settledBricks: Brick[] = [];
+  settledBricks: Map<string, Brick> = new Map();
 
   bricks: Brick[] = [];
   tetraminoBricks: Map<string, Brick> = new Map();
@@ -41,20 +41,31 @@ export class Board {
 
   moveY(): void {
     const updatedMovingBricks: Brick[] = [];
+    const initTetraCounter = this.settledBricks.size;
+    let tetraCounter = initTetraCounter;
     for (let [key, movingItem] of this.movingBricks) {
-      const newBrick = this.bricks.find(item => item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1);
+      const newBrick = this.bricks
+        .find(item => item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1);
       console.log('Pos x --> ', newBrick?.getX());
       console.log('Pos y --> ', newBrick?.getY());
       if (newBrick) {
         this.unsetSingleBrick(movingItem);
-        updatedMovingBricks.push(newBrick);
+        if (this.hasBrickAtCoordinates(newBrick) || newBrick.getY() === this.boardLength - 1) {
+          // this.settledBricks.set(this.getBrickId(newBrick), newBrick);
+          this.settleBrick(newBrick);
+          tetraCounter = initTetraCounter + 4;
+        } else {
+          updatedMovingBricks.push(newBrick);
+        }
       }
     }
 
-    updatedMovingBricks.forEach(newItem => {
-      this.movingBricks.set(this.getBrickId(newItem), newItem);
-      newItem.mark('blue');
-    });
+    if (tetraCounter === initTetraCounter) {
+      updatedMovingBricks.forEach(newItem => {
+        this.movingBricks.set(this.getBrickId(newItem), newItem);
+        newItem.mark('blue');
+      });
+    }
   }
 
   moveXLeft(): void {
@@ -78,12 +89,20 @@ export class Board {
     }
   }
 
+  private settleBrick(brick: Brick): void {
+    this.settledBricks.set(this.getBrickId(brick), brick);
+    brick.mark('red');
+  }
+
   private unsetSingleBrick(activeBrick: Brick): void {
     activeBrick.clear();
     this.movingBricks.delete(this.getBrickId(activeBrick));
   }
 
-  //TODO: how to do that???
+  private hasBrickAtCoordinates(brickToCheck: Brick): boolean {
+    return this.settledBricks.has(this.getBrickId(brickToCheck));
+  }
+
   private isBottomReached(brick: Brick): boolean {
     return false;
   }
