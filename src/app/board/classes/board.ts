@@ -44,10 +44,11 @@ export class Board {
     const initTetraCounter = this.settledBricks.size;
     let tetraCounter = initTetraCounter;
     for (let [key, movingItem] of this.movingBricks) {
+      console.log('movingItem', movingItem);
       const newBrick = this.bricks
         .find(item => item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1);
-      console.log('Pos x --> ', newBrick?.getX());
-      console.log('Pos y --> ', newBrick?.getY());
+      // console.log('Pos x --> ', newBrick?.getX());
+      // console.log('Pos y --> ', newBrick?.getY());
       if (newBrick) {
         this.unsetSingleBrick(movingItem);
         if (this.hasBrickAtCoordinates(newBrick) || newBrick.getY() === this.boardLength - 1) {
@@ -113,5 +114,9 @@ export class Board {
 
   private isRightLimitReached(brick: Brick): boolean {
     return brick.getX() >= (this.boardWidth - 1);
+  }
+
+  private isPositionTaken(xPos: number, yPos: number): boolean {
+    return this.settledBricks.has(xPos + '-' + yPos);
   }
 }

@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { interval, of, takeWhile } from 'rxjs';
-import { Board } from './utils/board';
-import { Brick } from './utils/brick';
-import { GameBrick } from './utils/game-brick';
-import { ObjectUtils } from './utils/ObjectUtils';
+import { Board } from './classes/board';
+import { Brick } from './classes/brick';
+import { GameBrick } from './classes/game-brick';
+import { ObjectUtils } from '../utils/ObjectUtils';
 
 export enum BLOCK_TYPE {
   I = 'I',
@@ -100,7 +100,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     } else {
       this.board.moveY();
     }
-    console.log('%c random block --> ', 'color: red', this.getRandomTetraminoType());
+    //console.log('%c random block --> ', 'color: red', this.getRandomTetraminoType());
   }
 
   private moveTertraminoLeft(): void {
