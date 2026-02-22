@@ -1,4 +1,5 @@
-import { Brick } from './brick';
+import {Brick, DirectionX} from './brick';
+
 
 export class GameBrick extends Brick {
   constructor(x: number, y: number, color: string) {
@@ -6,8 +7,14 @@ export class GameBrick extends Brick {
     this.mark(color);
   }
 
-  moveX(): number {
-    this.x++;
+  moveX (direction: DirectionX): number {
+    if (direction === DirectionX.LEFT) {
+      this.x--;
+    }
+
+    if (direction === DirectionX.RIGHT) {
+      this.x++;
+    }
     return this.x;
   }
 

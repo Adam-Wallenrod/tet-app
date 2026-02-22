@@ -1,5 +1,4 @@
-import { Brick } from './brick';
-import { GameBrick } from './game-brick';
+import {Brick, BrickType, DirectionX} from './brick';
 
 export class Board {
   readonly boardLength = 20;
@@ -43,10 +42,14 @@ export class Board {
     const updatedMovingBricks: Brick[] = [];
     const initTetraCounter = this.settledBricks.size;
     let tetraCounter = initTetraCounter;
+    console.log('this.bricks', this.bricks);
+    //TODO: looks like not using moveX and moveY from Brick class at all!!!
     for (let [key, movingItem] of this.movingBricks) {
       console.log('movingItem', movingItem);
-      const newBrick = this.bricks
-        .find(item => item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1);
+      const newBrick = this.bricks.find(item => {
+        return !this.hasBrickAtCoordinates(item) &&
+        item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1
+      });
       // console.log('Pos x --> ', newBrick?.getX());
       // console.log('Pos y --> ', newBrick?.getY());
       if (newBrick) {
@@ -58,25 +61,24 @@ export class Board {
         } else {
           updatedMovingBricks.push(newBrick);
         }
+      } else {
+        this.unsetSingleBrick(movingItem);
+        this.settleBrick(movingItem);
       }
     }
 
     if (tetraCounter === initTetraCounter) {
       updatedMovingBricks.forEach(newItem => {
         this.movingBricks.set(this.getBrickId(newItem), newItem);
-        newItem.mark('blue');
+        newItem.mark('blue', BrickType.MOVING);
       });
     }
   }
 
-  moveXLeft(): void {
+  moveX(direction: DirectionX): void {
 
   }
 
-
-  moveXRight(): void {
-
-  }
 
   private getBrickId(brick: Brick): string {
     return brick.getX() + '-' + brick.getY();
@@ -92,7 +94,7 @@ export class Board {
 
   private settleBrick(brick: Brick): void {
     this.settledBricks.set(this.getBrickId(brick), brick);
-    brick.mark('red');
+    brick.mark('red', BrickType.SETTLED);
   }
 
   private unsetSingleBrick(activeBrick: Brick): void {
@@ -100,6 +102,7 @@ export class Board {
     this.movingBricks.delete(this.getBrickId(activeBrick));
   }
 
+  //TODO: consider using a better name
   private hasBrickAtCoordinates(brickToCheck: Brick): boolean {
     return this.settledBricks.has(this.getBrickId(brickToCheck));
   }

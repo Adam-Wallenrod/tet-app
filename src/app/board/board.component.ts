@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { interval, of, takeWhile } from 'rxjs';
 import { Board } from './classes/board';
-import { Brick } from './classes/brick';
+import {Brick, DirectionX} from './classes/brick';
 import { GameBrick } from './classes/game-brick';
 import { ObjectUtils } from '../utils/ObjectUtils';
 
@@ -27,6 +27,10 @@ export enum KEY_CODE {
   imports: [CommonModule],
   templateUrl: './board.component.html',
   styleUrl: './board.component.css',
+  //TODO: replace ???
+  // host: {
+  //   'document:keypress': 'handleKeyboardEvent($event)',
+  // }
 })
 export class BoardComponent implements OnInit, OnDestroy {
   readonly STARTING_X_POS = 3;
@@ -45,13 +49,13 @@ export class BoardComponent implements OnInit, OnDestroy {
   #alive = true;
 
   @HostListener('window:keyup', ['$event'])
-  keyevent(key: KeyboardEvent) {
+  keyEvent(key: KeyboardEvent) {
     if (key.keyCode === KEY_CODE.LEFT_ARROW) {
-      this.moveTertraminoLeft();
+      this.moveTertraminoHorizontally(DirectionX.LEFT);
     }
 
     if (key.keyCode === KEY_CODE.RIGHT_ARROW) {
-      this.moveTertraminoRight();
+      this.moveTertraminoHorizontally(DirectionX.RIGHT);
     }
   }
 
@@ -103,11 +107,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     //console.log('%c random block --> ', 'color: red', this.getRandomTetraminoType());
   }
 
-  private moveTertraminoLeft(): void {
-
-  }
-
-  private moveTertraminoRight(): void {
-
+  private moveTertraminoHorizontally(direction: DirectionX): void {
+    this.board.moveX(direction);
   }
 }

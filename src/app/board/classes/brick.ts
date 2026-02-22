@@ -1,7 +1,20 @@
+export enum BrickType {
+  MOVING = 'Moving',
+  SETTLED = 'Setting',
+  DEFAULT = 'Default',
+}
+
+export enum DirectionX {
+  LEFT = 'Left',
+  RIGHT = 'Right',
+}
+
 export class Brick {
   private color: string = 'white';
 
-  private isFilled: boolean = false;
+  private isMoving: boolean = false;
+
+  private isSettled: boolean = false;
 
   protected x: number;
 
@@ -26,14 +39,23 @@ export class Brick {
     return this.y;
   }
 
-  mark(color: string): void {
+  mark(color: string, type: BrickType = BrickType.DEFAULT): void {
     this.color = color;
-    this.isFilled = true;
+    switch (type) {
+      case BrickType.MOVING:
+        this.isMoving = true;
+        break;
+      case BrickType.SETTLED:
+        this.isSettled = true;
+        break;
+    }
+    this.isMoving = true;
   }
 
 
   clear(): void {
     this.color = 'white';
-    this.isFilled = false;
+    this.isMoving = false;
+    this.isSettled = false;
   }
 }
