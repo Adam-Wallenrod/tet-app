@@ -73,7 +73,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     const min = 0;
     const blockTypes = ObjectUtils.enumToArray(BLOCK_TYPE);
     const randomNumber = Math.floor(Math.random() * max + min);
-    console.log('%c randomNumber --> ', 'color: blue', randomNumber);
+    //console.log('%c randomNumber --> ', 'color: blue', randomNumber);
     return blockTypes[randomNumber];
   }
 
@@ -109,5 +109,6 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   private moveTertraminoHorizontally(direction: DirectionX): void {
     this.board.moveX(direction);
+    console.log('%c moveTertraminoHorizontally -> ', 'color: blue', direction);
   }
 }

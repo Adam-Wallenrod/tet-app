@@ -1,4 +1,4 @@
-import {Brick, BrickType, DirectionX} from './brick';
+import { Brick, BrickType, DirectionX } from './brick';
 
 export class Board {
   readonly boardLength = 20;
@@ -14,11 +14,17 @@ export class Board {
     this.initBoard();
   }
 
+  //TODO: change name to addToMovingTetramino ???
   addTetramino(x: number, y: number, color: string): void {
     const tetramino = this.createSingleBrick(x, y, color);
     if (tetramino) {
       this.movingBricks.set(this.getBrickId(tetramino), tetramino);
     }
+  }
+
+  addMovingTetramino(tetramino: Brick): void {
+    tetramino.mark('blue', BrickType.MOVING);
+    this.movingBricks.set(this.getBrickId(tetramino), tetramino);
   }
 
   createSingleBrick(x: number, y: number, color: string): Brick | undefined {
@@ -42,10 +48,10 @@ export class Board {
     const updatedMovingBricks: Brick[] = [];
     const initTetraCounter = this.settledBricks.size;
     let tetraCounter = initTetraCounter;
-    console.log('this.bricks', this.bricks);
+    //console.log('this.bricks', this.bricks);
     //TODO: looks like not using moveX and moveY from Brick class at all!!!
     for (let [key, movingItem] of this.movingBricks) {
-      console.log('movingItem', movingItem);
+      //console.log('movingItem', movingItem);
       const newBrick = this.bricks.find(item => {
         return !this.hasBrickAtCoordinates(item) &&
         item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1
@@ -76,7 +82,23 @@ export class Board {
   }
 
   moveX(direction: DirectionX): void {
-
+    const newMovingBricks: Brick[] = [];
+    for (let [key, movingItem] of this.movingBricks) {
+      const moveStep: number = direction === DirectionX.LEFT ? -1 : 1;
+      const newBrick = this.bricks.find(item => {
+        return !this.hasBrickAtCoordinates(item) && item.getY() === movingItem.getY()
+          && item.getX() === movingItem.getX() + moveStep;
+      });
+      if (newBrick) {
+        this.unsetSingleBrick(movingItem);
+        //replace with separate function ???
+        newMovingBricks.push(newBrick);
+      }
+    }
+    //need to start think about real tetraminos
+    for (let movingItem of newMovingBricks) {
+      this.addMovingTetramino(movingItem);
+    }
   }
 
 
