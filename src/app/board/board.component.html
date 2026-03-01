@@ -1,15 +1,31 @@
 <div class="board-wrapper">
-
   <ng-container>
     <div *ngFor="let brick of board.getBricks()" class="brick"
          id="{{ brick.getX() }}-{{ brick.getY() }}"
-         style="background-color: {{ brick.getColor() }}"
+         [ngStyle]="{ 'background-color': brick.getColor() }"
+         [class.with-border]="showBrickIds"
     >
-      {{ brick.getX() }}/{{ brick.getY() }}
+      @if (showBrickIds) {
+        {{ brick.getX() }}/{{ brick.getY() }}
+      }
     </div>
   </ng-container>
-
 </div>
-<div>Time: {{ timer }}</div>
-<div>Moving bricks: {{ board.movingBricks.size }}</div>
-<div>Settled bricks: {{ board.settledBricks.size }}</div>
+
+<div class="game-info">
+  <div class="time">Time: {{ timer }}</div>
+  <div>Moving bricks: {{ board.movingBricks.size }}</div>
+  <div>Settled bricks: {{ board.settledBricks.size }}</div>
+  <div class="options">
+    <button mat-flat-button
+             color="primary"
+             (click)="showBrickIds = !showBrickIds"
+    >
+      @if(showBrickIds) {
+        Hide brick ids
+      } @else {
+        Show brick ids
+      }
+    </button>
+  </div>
+</div>

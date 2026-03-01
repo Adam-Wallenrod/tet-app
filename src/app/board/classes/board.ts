@@ -2,12 +2,15 @@ import { Brick, BrickType, DirectionX } from './brick';
 
 export class Board {
   readonly boardLength = 20;
+
   readonly boardWidth = 10;
 
   movingBricks: Map<string, Brick> = new Map();
+
   settledBricks: Map<string, Brick> = new Map();
 
   bricks: Brick[] = [];
+
   tetraminoBricks: Map<string, Brick> = new Map();
 
   constructor() {
@@ -53,15 +56,14 @@ export class Board {
     for (let [key, movingItem] of this.movingBricks) {
       //console.log('movingItem', movingItem);
       const newBrick = this.bricks.find(item => {
-        return !this.hasBrickAtCoordinates(item) &&
+        return !this.hasSettledAtCoordinates(item) &&
         item.getX() === movingItem.getX() && item.getY() === movingItem.getY() + 1
       });
       // console.log('Pos x --> ', newBrick?.getX());
       // console.log('Pos y --> ', newBrick?.getY());
       if (newBrick) {
         this.unsetSingleBrick(movingItem);
-        if (this.hasBrickAtCoordinates(newBrick) || newBrick.getY() === this.boardLength - 1) {
-          // this.settledBricks.set(this.getBrickId(newBrick), newBrick);
+        if (this.hasSettledAtCoordinates(newBrick) || newBrick.getY() === this.boardLength - 1) {
           this.settleBrick(newBrick);
           tetraCounter = initTetraCounter + 4;
         } else {
@@ -86,7 +88,7 @@ export class Board {
     for (let [key, movingItem] of this.movingBricks) {
       const moveStep: number = direction === DirectionX.LEFT ? -1 : 1;
       const newBrick = this.bricks.find(item => {
-        return !this.hasBrickAtCoordinates(item) && item.getY() === movingItem.getY()
+        return !this.hasSettledAtCoordinates(item) && item.getY() === movingItem.getY()
           && item.getX() === movingItem.getX() + moveStep;
       });
       if (newBrick) {
@@ -124,8 +126,7 @@ export class Board {
     this.movingBricks.delete(this.getBrickId(activeBrick));
   }
 
-  //TODO: consider using a better name
-  private hasBrickAtCoordinates(brickToCheck: Brick): boolean {
+  private hasSettledAtCoordinates(brickToCheck: Brick): boolean {
     return this.settledBricks.has(this.getBrickId(brickToCheck));
   }
 

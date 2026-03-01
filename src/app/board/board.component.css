@@ -2,14 +2,26 @@
 .board-wrapper {
   display: grid;
   grid-template-columns: repeat(10, 30px);
+  width: fit-content;
+  border: 1px solid black;
 }
-
-
 
 .brick {
   width: 30px;
   height: 30px;
-  border: 1px solid black;
   background: white;
   font-size: 10px;
+}
+
+ .brick.with-border {
+   border: 1px solid black;
+ }
+
+
+.game-info {
+  padding-top: 25px;
+
+  div {
+    padding: 10px 0;
+  }
 }

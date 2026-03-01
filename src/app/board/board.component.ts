@@ -5,6 +5,7 @@ import { Board } from './classes/board';
 import {Brick, DirectionX} from './classes/brick';
 import { GameBrick } from './classes/game-brick';
 import { ObjectUtils } from '../utils/ObjectUtils';
+import { MatButtonModule } from "@angular/material/button";
 
 export enum BLOCK_TYPE {
   I = 'I',
@@ -24,7 +25,10 @@ export enum KEY_CODE {
 @Component({
   selector: 'app-board',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    MatButtonModule,
+  ],
   templateUrl: './board.component.html',
   styleUrl: './board.component.css',
   //TODO: replace ???
@@ -43,6 +47,8 @@ export class BoardComponent implements OnInit, OnDestroy {
   board: Board = new Board();
 
   interval = interval(1000);
+
+  showBrickIds = false
 
   timer: number = 0;
 
