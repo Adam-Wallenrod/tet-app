@@ -103,6 +103,15 @@ export class Board {
     }
   }
 
+  private isEndGame(): boolean {
+    let endGame = false;
+    this.settledBricks.forEach(settled => {
+     if (settled.getY() === 0 ) {
+       endGame = true;
+     }
+   });
+    return endGame;
+  }
 
   private getBrickId(brick: Brick): string {
     return brick.getX() + '-' + brick.getY();
@@ -117,8 +126,12 @@ export class Board {
   }
 
   private settleBrick(brick: Brick): void {
+    console.log('$$$ settledBrickId: ', this.getBrickId(brick));
     this.settledBricks.set(this.getBrickId(brick), brick);
     brick.mark('red', BrickType.SETTLED);
+    if (this.isEndGame()) {
+      window.alert('Game Over!');
+    }
   }
 
   private unsetSingleBrick(activeBrick: Brick): void {

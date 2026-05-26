@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { interval, of, takeWhile } from 'rxjs';
+import { interval, of, takeUntil, takeWhile } from 'rxjs';
 import { Board } from './classes/board';
 import {Brick, DirectionX} from './classes/brick';
 import { GameBrick } from './classes/game-brick';
@@ -46,9 +46,9 @@ export class BoardComponent implements OnInit, OnDestroy {
 
   board: Board = new Board();
 
-  interval = interval(1000);
+  interval = interval(250);
 
-  showBrickIds = false
+  showBrickIds = true;
 
   timer: number = 0;
 
@@ -87,6 +87,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.interval
       .pipe(
         takeWhile(() => this.#alive),
+        //takeUntil(),
       )
       .subscribe((value) => {
         this.timer = value;
